@@ -1,0 +1,27 @@
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: JavaToolInstaller@0
+    displayName: Install Java 17
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  - script: chmod +x ./mvnw
+    displayName: Give Maven Wrapper permission
+
+  - script: ./mvnw clean package
+    displayName: Build Java application
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Java JAR
+    inputs:
+      PathtoPublish: 'target'
+      ArtifactName: 'java-application'
+      publishLocation: 'Container'
